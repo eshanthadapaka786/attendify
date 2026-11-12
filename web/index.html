@@ -1,0 +1,2134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ATTENDIFY • Student Attendance Management System</title>
+  <!-- Google Fonts & Material Symbols -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+  <style>
+    :root {
+      --primary: #4F46E5;
+      --primary-light: #6366F1;
+      --primary-dark: #3730A3;
+      --primary-container: #EEF2FF;
+      --secondary: #7C3AED;
+      --secondary-light: #8B5CF6;
+      --secondary-container: #F3E8FF;
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --text: #0F172A;
+      --secondary-text: #64748B;
+      --muted-text: #94A3B8;
+      --border: #E2E8F0;
+      --green: #10B981;
+      --green-container: #ECFDF5;
+      --green-text: #047857;
+      --red: #EF4444;
+      --red-container: #FEF2F2;
+      --red-text: #B91C1C;
+      --amber: #F59E0B;
+      --amber-container: #FFFBEB;
+      --amber-text: #B45309;
+      --blue: #0EA5E9;
+      --blue-container: #F0F9FF;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: #0F172A;
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      overflow-x: hidden;
+    }
+
+    /* Top Control Bar for Localhost Preview */
+    .preview-bar {
+      width: 100%;
+      background: #1E1B4B;
+      color: white;
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+      z-index: 1000;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .preview-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(16, 185, 129, 0.2);
+      color: #34D399;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 11px;
+      border: 1px solid rgba(52, 211, 153, 0.3);
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #34D399;
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.3); opacity: 1; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+
+    .view-toggles {
+      display: flex;
+      gap: 6px;
+      background: #0F172A;
+      padding: 4px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .view-btn {
+      background: transparent;
+      border: none;
+      color: #94A3B8;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .view-btn:hover {
+      color: white;
+    }
+
+    .view-btn.active {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 2px 8px rgba(79, 70, 229, 0.4);
+    }
+
+    /* Device Container */
+    .viewport-wrapper {
+      padding: 20px 16px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      flex: 1;
+    }
+
+    .app-frame {
+      background: var(--bg);
+      width: 100%;
+      max-width: 440px;
+      height: 840px;
+      max-height: calc(100vh - 75px);
+      border-radius: 38px;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.4), 0 0 0 12px #1E293B;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      transition: max-width 0.3s ease, border-radius 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .app-frame.tablet {
+      max-width: 768px;
+      height: 860px;
+      border-radius: 28px;
+    }
+
+    .app-frame.desktop {
+      max-width: 1080px;
+      height: auto;
+      min-height: calc(100vh - 90px);
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      margin-bottom: 30px;
+    }
+
+    /* Screen Views */
+    .screen-container {
+      flex: 1;
+      overflow-y: auto;
+      padding-bottom: 90px;
+      position: relative;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .app-frame.desktop .screen-container {
+      overflow-y: visible;
+    }
+
+    .screen {
+      display: none;
+      animation: fadeIn 0.2s ease-in-out;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Material 3 App Bar */
+    .app-bar {
+      background: var(--card-bg);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      flex-shrink: 0;
+    }
+
+    .app-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .app-logo {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+      flex-shrink: 0;
+    }
+
+    .app-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .app-title {
+      font-size: 19px;
+      font-weight: 900;
+      letter-spacing: -0.3px;
+      color: var(--text);
+    }
+
+    .app-tag {
+      font-size: 10px;
+      font-weight: 800;
+      background: var(--primary-container);
+      color: var(--primary);
+      padding: 3px 7px;
+      border-radius: 6px;
+    }
+
+    .app-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .action-icon-btn {
+      background: transparent;
+      border: none;
+      color: var(--text);
+      cursor: pointer;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      transition: background 0.2s;
+    }
+
+    .action-icon-btn:hover {
+      background: var(--border);
+    }
+
+    .badge-dot {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: var(--red);
+      color: white;
+      font-size: 10px;
+      font-weight: 800;
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .profile-avatar-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--secondary-container);
+      color: var(--secondary);
+      border: 2px solid var(--primary);
+      font-weight: 800;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    /* Content Layout */
+    .content-body {
+      padding: 18px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* Welcome Section */
+    .welcome-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      gap: 12px;
+    }
+
+    .welcome-text-wrap {
+      flex: 1;
+      min-width: 160px;
+    }
+
+    .welcome-title {
+      font-size: 21px;
+      font-weight: 800;
+      letter-spacing: -0.4px;
+      color: var(--text);
+    }
+
+    .welcome-subtitle {
+      font-size: 13px;
+      color: var(--secondary-text);
+      margin-top: 3px;
+    }
+
+    .date-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: white;
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+      transition: all 0.2s;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    .date-badge:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* Hero Banner */
+    .hero-card {
+      background: linear-gradient(135deg, #4338CA 0%, #6366F1 50%, #7C3AED 100%);
+      border-radius: 24px;
+      padding: 24px;
+      color: white;
+      margin-bottom: 22px;
+      box-shadow: 0 16px 32px rgba(79, 70, 229, 0.28);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.2);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .hero-heading {
+      font-size: 25px;
+      font-weight: 900;
+      line-height: 1.2;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+
+    .hero-desc {
+      font-size: 13px;
+      color: rgba(255,255,255,0.9);
+      line-height: 1.4;
+      margin-bottom: 20px;
+      max-width: 540px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-hero-primary {
+      background: white;
+      color: var(--primary);
+      border: none;
+      padding: 12px 20px;
+      border-radius: 14px;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      transition: all 0.2s;
+    }
+
+    .btn-hero-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+    }
+
+    .btn-hero-secondary {
+      background: transparent;
+      color: white;
+      border: 1.5px solid rgba(255,255,255,0.6);
+      padding: 12px 18px;
+      border-radius: 14px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-hero-secondary:hover {
+      background: rgba(255,255,255,0.15);
+    }
+
+    /* 4 Stat Cards Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    @media (min-width: 680px) {
+      .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+      }
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 20px;
+      padding: 16px 14px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 145px;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 24px rgba(79, 70, 229, 0.08);
+      border-color: var(--primary-light);
+    }
+
+    .stat-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .stat-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .stat-val {
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--text);
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+    }
+
+    .stat-label {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--secondary-text);
+      margin: 3px 0 5px 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .stat-sub {
+      font-size: 11px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Weekly Chart Section */
+    .chart-card {
+      background: white;
+      border-radius: 22px;
+      padding: 20px;
+      border: 1px solid var(--border);
+      margin-bottom: 24px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.02);
+    }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      gap: 12px;
+    }
+
+    .chart-header-left {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .chart-title {
+      font-size: 16px;
+      font-weight: 800;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .chart-subtitle {
+      font-size: 12px;
+      color: var(--secondary-text);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .chart-inspector-tag {
+      background: var(--primary-container);
+      color: var(--primary);
+      padding: 6px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .chart-bars-area {
+      height: 150px;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-around;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+
+    .chart-target-line {
+      position: absolute;
+      top: 38px;
+      left: 0;
+      right: 0;
+      border-top: 1.5px dashed var(--amber);
+      display: flex;
+      justify-content: flex-end;
+      padding-right: 6px;
+      pointer-events: none;
+    }
+
+    .chart-target-pill {
+      background: var(--amber-container);
+      color: var(--amber-text);
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      transform: translateY(-50%);
+    }
+
+    .bar-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      position: relative;
+      padding: 0 4px;
+    }
+
+    .bar-val {
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 6px;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .bar-col.active .bar-val,
+    .bar-col:hover .bar-val {
+      opacity: 1;
+    }
+
+    .chart-bar {
+      width: 32px;
+      background: rgba(79, 70, 229, 0.22);
+      border-radius: 10px 10px 4px 4px;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .bar-col.active .chart-bar,
+    .bar-col:hover .chart-bar {
+      background: linear-gradient(180deg, var(--secondary), var(--primary));
+      box-shadow: 0 6px 14px rgba(79, 70, 229, 0.4);
+      width: 36px;
+    }
+
+    .chart-days-row {
+      display: flex;
+      justify-content: space-around;
+      padding-top: 10px;
+    }
+
+    .chart-day-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--secondary-text);
+      text-align: center;
+      width: 36px;
+      cursor: pointer;
+    }
+
+    .chart-day-label.active {
+      color: var(--primary);
+      font-weight: 800;
+    }
+
+    .chart-footer {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      background: var(--bg);
+      border-radius: 12px;
+      padding: 10px 8px;
+      margin-top: 16px;
+      font-size: 11px;
+      text-align: center;
+    }
+
+    /* Quick Action Cards */
+    .section-title {
+      font-size: 17px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+
+    .quick-actions-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    @media (min-width: 680px) {
+      .quick-actions-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+      }
+    }
+
+    .action-card {
+      background: white;
+      border-radius: 18px;
+      padding: 16px 14px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .action-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+      border-color: var(--primary);
+    }
+
+    .action-card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+      font-size: 20px;
+    }
+
+    .action-card-title {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .action-card-sub {
+      font-size: 11px;
+      color: var(--muted-text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Monthly Progress Card */
+    .monthly-card {
+      background: white;
+      border-radius: 22px;
+      padding: 20px;
+      border: 1px solid var(--border);
+      margin-bottom: 24px;
+    }
+
+    .progress-bar-bg {
+      height: 12px;
+      background: var(--bg);
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 10px 0 16px 0;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 8px;
+      transition: width 0.5s ease;
+    }
+
+    .monthly-stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .monthly-stat-item {
+      background: var(--bg);
+      padding: 10px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      text-align: center;
+    }
+
+    /* Activity Stream */
+    .activity-item {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      transition: all 0.2s;
+    }
+
+    .activity-item:hover {
+      border-color: var(--primary-light);
+    }
+
+    .activity-user {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .activity-text-wrap {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .user-name {
+      font-size: 14px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .user-meta {
+      font-size: 12px;
+      color: var(--secondary-text);
+      margin-top: 1px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .activity-status-col {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      flex-shrink: 0;
+    }
+
+    .status-chip {
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .status-chip.present {
+      background: var(--green-container);
+      color: var(--green);
+    }
+
+    .status-chip.absent {
+      background: var(--red-container);
+      color: var(--red);
+    }
+
+    .status-chip.late {
+      background: var(--amber-container);
+      color: var(--amber);
+    }
+
+    /* Interactive Student Card with [P] [A] [L] Toggles */
+    .student-card {
+      background: white;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      transition: all 0.2s;
+    }
+
+    .student-card:hover {
+      box-shadow: 0 4px 14px rgba(0,0,0,0.03);
+    }
+
+    .student-card.is-absent {
+      border-color: rgba(239, 68, 68, 0.4);
+      background: #FFFDFD;
+    }
+
+    .student-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .student-text-wrap {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .toggle-group {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .toggle-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      font-weight: 800;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .toggle-btn.btn-p:hover,
+    .toggle-btn.btn-p.active {
+      background: var(--green-container);
+      border-color: var(--green);
+      color: var(--green);
+      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
+    }
+
+    .toggle-btn.btn-a:hover,
+    .toggle-btn.btn-a.active {
+      background: var(--red-container);
+      border-color: var(--red);
+      color: var(--red);
+      box-shadow: 0 2px 6px rgba(239, 68, 68, 0.25);
+    }
+
+    .toggle-btn.btn-l:hover,
+    .toggle-btn.btn-l.active {
+      background: var(--amber-container);
+      border-color: var(--amber);
+      color: var(--amber);
+      box-shadow: 0 2px 6px rgba(245, 158, 11, 0.25);
+    }
+
+    /* Bottom Navigation Bar */
+    .bottom-nav {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 68px;
+      background: white;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      z-index: 100;
+      box-shadow: 0 -4px 16px rgba(0,0,0,0.03);
+      flex-shrink: 0;
+    }
+
+    .app-frame.desktop .bottom-nav {
+      position: sticky;
+      bottom: 0;
+      border-radius: 0 0 20px 20px;
+    }
+
+    .nav-tab {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      background: none;
+      border: none;
+      color: var(--secondary-text);
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 6px 10px;
+      border-radius: 16px;
+      transition: all 0.2s;
+    }
+
+    .nav-tab .material-symbols-rounded {
+      font-size: 22px;
+    }
+
+    .nav-tab.active {
+      color: var(--primary);
+      font-weight: 800;
+    }
+
+    .nav-tab.active .nav-icon-wrap {
+      background: var(--primary-container);
+      padding: 4px 16px;
+      border-radius: 14px;
+    }
+
+    /* Modal Sheets & Dialogs */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-card {
+      background: white;
+      border-radius: 24px;
+      width: 100%;
+      max-width: 480px;
+      padding: 24px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+      animation: modalSlide 0.25s ease-out;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    @keyframes modalSlide {
+      from { opacity: 0; transform: translateY(20px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .form-input, .form-select {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-input:focus, .form-select:focus {
+      border-color: var(--primary);
+    }
+
+    /* Toast Notification */
+    .toast-msg {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #1E293B;
+      color: white;
+      padding: 12px 22px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      z-index: 3000;
+      transition: transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    }
+
+    .toast-msg.show {
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Localhost Control Bar -->
+  <div class="preview-bar">
+    <div class="preview-bar-left">
+      <div class="brand-pill">
+        <span class="material-symbols-rounded" style="color:#818cf8;">school</span>
+        <span>ATTENDIFY</span>
+      </div>
+      <div class="status-badge">
+        <div class="status-dot"></div>
+        <span>Localhost Active • Port 8080</span>
+      </div>
+    </div>
+    <div class="view-toggles">
+      <button class="view-btn active" onclick="setDeviceView('phone')">
+        <span class="material-symbols-rounded" style="font-size:16px;">phone_iphone</span> Phone
+      </button>
+      <button class="view-btn" onclick="setDeviceView('tablet')">
+        <span class="material-symbols-rounded" style="font-size:16px;">tablet_mac</span> Tablet
+      </button>
+      <button class="view-btn" onclick="setDeviceView('desktop')">
+        <span class="material-symbols-rounded" style="font-size:16px;">desktop_windows</span> Desktop
+      </button>
+    </div>
+  </div>
+
+  <!-- Device Frame Wrapper -->
+  <div class="viewport-wrapper">
+    <div class="app-frame" id="appFrame">
+
+      <!-- App Bar -->
+      <div class="app-bar">
+        <div class="app-brand">
+          <div class="app-logo">
+            <span class="material-symbols-rounded">how_to_reg</span>
+          </div>
+          <div class="app-title-wrap">
+            <span class="app-title">ATTENDIFY</span>
+            <span class="app-tag">LAB v1.0</span>
+          </div>
+        </div>
+        <div class="app-actions">
+          <button class="action-icon-btn" onclick="openNotificationsModal()" title="Notifications">
+            <span class="material-symbols-rounded">notifications</span>
+            <span class="badge-dot" id="notifBadge">2</span>
+          </button>
+          <div class="profile-avatar-btn" onclick="switchTab(4)" title="Teacher Profile">SJ</div>
+        </div>
+      </div>
+
+      <!-- Main Screen Views -->
+      <div class="screen-container">
+
+        <!-- ========================================== -->
+        <!-- TAB 0: DASHBOARD / LANDING PAGE            -->
+        <!-- ========================================== -->
+        <div class="screen active" id="tab0">
+          <div class="content-body">
+            
+            <!-- 2. Welcome Header -->
+            <div class="welcome-section">
+              <div class="welcome-text-wrap">
+                <h1 class="welcome-title">Hello, Teacher! 👋</h1>
+                <p class="welcome-subtitle">Welcome back to your classroom attendance portal</p>
+              </div>
+              <div class="date-badge" onclick="alert('Viewing attendance ledger for today: Thursday, Nov 12, 2026')">
+                <span class="material-symbols-rounded" style="color:var(--primary); font-size:18px;">calendar_month</span>
+                <span id="currentDateLabel">Thu, Nov 12, 2026</span>
+              </div>
+            </div>
+
+            <!-- 3. Hero Card -->
+            <div class="hero-card">
+              <div class="hero-tag">
+                <span class="material-symbols-rounded" style="font-size:14px; color:#FDE047;">bolt</span>
+                <span>Fast & Contactless Roll-Call</span>
+              </div>
+              <h2 class="hero-heading">Smart Attendance,<br>Smarter Learning</h2>
+              <p class="hero-desc">
+                Seamlessly track <span id="heroTotalStudents">48</span> students across 4 lecture batches with automated analytics and real-time defaulter alerts.
+              </p>
+              <div class="hero-buttons">
+                <button class="btn-hero-primary" onclick="switchTab(2)">
+                  <span class="material-symbols-rounded">check_circle</span>
+                  Mark Attendance
+                </button>
+                <button class="btn-hero-secondary" onclick="openAddStudentModal()">
+                  <span class="material-symbols-rounded">person_add</span>
+                  Add Student
+                </button>
+              </div>
+            </div>
+
+            <!-- 4. Four Statistics Cards -->
+            <div class="stats-grid">
+              <!-- Total Students -->
+              <div class="stat-card" onclick="switchTab(1)">
+                <div class="stat-card-header">
+                  <div class="stat-icon" style="background:var(--primary-container); color:var(--primary);">
+                    <span class="material-symbols-rounded">groups</span>
+                  </div>
+                  <span style="font-size:11px; font-weight:700; color:var(--primary); background:var(--primary-container); padding:3px 7px; border-radius:6px;">Active</span>
+                </div>
+                <div class="stat-val" id="statTotalStudents">12</div>
+                <div class="stat-label">Total Students</div>
+                <div class="stat-sub" style="color:var(--primary);">● 4 Active Batches</div>
+              </div>
+
+              <!-- Present Today -->
+              <div class="stat-card" onclick="switchTab(2)">
+                <div class="stat-card-header">
+                  <div class="stat-icon" style="background:var(--green-container); color:var(--green);">
+                    <span class="material-symbols-rounded">check_circle</span>
+                  </div>
+                  <span style="font-size:11px; font-weight:700; color:var(--green); background:var(--green-container); padding:3px 7px; border-radius:6px;">Live</span>
+                </div>
+                <div class="stat-val" id="statPresentToday" style="color:var(--green);">9</div>
+                <div class="stat-label">Present Today</div>
+                <div class="stat-sub" style="color:var(--green);" id="statLateText">● 1 Late arrivals</div>
+              </div>
+
+              <!-- Absent Today -->
+              <div class="stat-card" onclick="switchTab(2)">
+                <div class="stat-card-header">
+                  <div class="stat-icon" style="background:var(--red-container); color:var(--red);">
+                    <span class="material-symbols-rounded">cancel</span>
+                  </div>
+                  <span style="font-size:11px; font-weight:700; color:var(--red); background:var(--red-container); padding:3px 7px; border-radius:6px;">Live</span>
+                </div>
+                <div class="stat-val" id="statAbsentToday" style="color:var(--red);">2</div>
+                <div class="stat-label">Absent Today</div>
+                <div class="stat-sub" style="color:var(--red);" id="statDefaulterSub">● 2 Defaulters (&lt;75%)</div>
+              </div>
+
+              <!-- Attendance Rate -->
+              <div class="stat-card" onclick="switchTab(3)">
+                <div class="stat-card-header">
+                  <div class="stat-icon" style="background:var(--secondary-container); color:var(--secondary);">
+                    <span class="material-symbols-rounded">pie_chart</span>
+                  </div>
+                  <span style="font-size:11px; font-weight:700; color:var(--secondary); background:var(--secondary-container); padding:3px 7px; border-radius:6px;">Target 75%</span>
+                </div>
+                <div class="stat-val" id="statAttendanceRate" style="color:var(--secondary);">82%</div>
+                <div class="stat-label">Attendance Rate</div>
+                <div class="stat-sub" style="color:var(--secondary);">● Target Exceeded</div>
+              </div>
+            </div>
+
+            <!-- 5. Weekly Chart -->
+            <div class="chart-card">
+              <div class="chart-header">
+                <div class="chart-header-left">
+                  <h3 class="chart-title">Weekly Attendance Overview</h3>
+                  <p class="chart-subtitle">Mon – Sat Analytics across College Batches</p>
+                </div>
+                <div class="chart-inspector-tag" id="chartActiveTag">
+                  <span class="material-symbols-rounded" style="font-size:14px;">insights</span>
+                  <span id="chartTagText">Thu: 96%</span>
+                </div>
+              </div>
+
+              <!-- Bars area -->
+              <div class="chart-bars-area">
+                <!-- Target Line -->
+                <div class="chart-target-line">
+                  <div class="chart-target-pill">Min 75% Target</div>
+                </div>
+
+                <div class="bar-col" onclick="inspectDay('Mon', 92, 44, 4)">
+                  <span class="bar-val">92%</span>
+                  <div class="chart-bar" style="height: 105px;"></div>
+                </div>
+                <div class="bar-col" onclick="inspectDay('Tue', 88, 42, 6)">
+                  <span class="bar-val">88%</span>
+                  <div class="chart-bar" style="height: 98px;"></div>
+                </div>
+                <div class="bar-col" onclick="inspectDay('Wed', 83, 40, 8)">
+                  <span class="bar-val">83%</span>
+                  <div class="chart-bar" style="height: 86px;"></div>
+                </div>
+                <div class="bar-col active" onclick="inspectDay('Thu', 96, 46, 2)">
+                  <span class="bar-val">96%</span>
+                  <div class="chart-bar" style="height: 120px;"></div>
+                </div>
+                <div class="bar-col" onclick="inspectDay('Fri', 90, 43, 5)">
+                  <span class="bar-val">90%</span>
+                  <div class="chart-bar" style="height: 102px;"></div>
+                </div>
+                <div class="bar-col" onclick="inspectDay('Sat', 94, 45, 3)">
+                  <span class="bar-val">94%</span>
+                  <div class="chart-bar" style="height: 114px;"></div>
+                </div>
+              </div>
+
+              <!-- Days row under bars -->
+              <div class="chart-days-row">
+                <div class="chart-day-label" onclick="inspectDay('Mon', 92, 44, 4)">Mon</div>
+                <div class="chart-day-label" onclick="inspectDay('Tue', 88, 42, 6)">Tue</div>
+                <div class="chart-day-label" onclick="inspectDay('Wed', 83, 40, 8)">Wed</div>
+                <div class="chart-day-label active" onclick="inspectDay('Thu', 96, 46, 2)">Thu</div>
+                <div class="chart-day-label" onclick="inspectDay('Fri', 90, 43, 5)">Fri</div>
+                <div class="chart-day-label" onclick="inspectDay('Sat', 94, 45, 3)">Sat</div>
+              </div>
+
+              <div class="chart-footer">
+                <div><span style="color:var(--muted-text);">Selected:</span> <strong id="chartFooterDay">Thursday</strong></div>
+                <div><span style="color:var(--muted-text);">Present:</span> <strong id="chartFooterPresent" style="color:var(--green);">46</strong></div>
+                <div><span style="color:var(--muted-text);">Absent:</span> <strong id="chartFooterAbsent" style="color:var(--red);">2</strong></div>
+                <div><span style="color:var(--muted-text);">Rate:</span> <strong id="chartFooterRate" style="color:var(--primary);">96%</strong></div>
+              </div>
+            </div>
+
+            <!-- 6. Quick Action Cards -->
+            <h3 class="section-title">Quick Actions</h3>
+            <div class="quick-actions-grid">
+              <div class="action-card" onclick="switchTab(2)">
+                <div class="action-card-icon" style="background:var(--primary-container); color:var(--primary);">
+                  <span class="material-symbols-rounded">checklist</span>
+                </div>
+                <div class="action-card-title">Mark Roll-Call</div>
+                <div class="action-card-sub">Instant toggles</div>
+              </div>
+              <div class="action-card" onclick="openAddStudentModal()">
+                <div class="action-card-icon" style="background:var(--secondary-container); color:var(--secondary);">
+                  <span class="material-symbols-rounded">person_add</span>
+                </div>
+                <div class="action-card-title">Add Student</div>
+                <div class="action-card-sub">Enroll in roster</div>
+              </div>
+              <div class="action-card" onclick="switchTab(3)">
+                <div class="action-card-icon" style="background:var(--blue-container); color:var(--blue);">
+                  <span class="material-symbols-rounded">bar_chart</span>
+                </div>
+                <div class="action-card-title">View Reports</div>
+                <div class="action-card-sub">Analytics & export</div>
+              </div>
+              <div class="action-card" onclick="openManageClassesModal()">
+                <div class="action-card-icon" style="background:var(--amber-container); color:var(--amber);">
+                  <span class="material-symbols-rounded">class</span>
+                </div>
+                <div class="action-card-title">Manage Classes</div>
+                <div class="action-card-sub">Batches & labs</div>
+              </div>
+            </div>
+
+            <!-- 9. Monthly Progress -->
+            <div class="monthly-card">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                  <h3 style="font-size:16px; font-weight:800;">Monthly Attendance Progress</h3>
+                  <p style="font-size:12px; color:var(--secondary-text);">November 2026 Academic Term</p>
+                </div>
+                <span style="background:var(--green-container); color:var(--green); font-size:11px; font-weight:800; padding:4px 10px; border-radius:8px;">
+                  +6.4% Above Target
+                </span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" style="width: 91.4%;"></div>
+              </div>
+              <div class="monthly-stats-row">
+                <div class="monthly-stat-item">
+                  <div style="color:var(--muted-text);">Working Days</div>
+                  <strong style="color:var(--primary);">22 Days</strong>
+                </div>
+                <div class="monthly-stat-item">
+                  <div style="color:var(--muted-text);">Best Day</div>
+                  <strong style="color:var(--green);">Thursday (96%)</strong>
+                </div>
+                <div class="monthly-stat-item">
+                  <div style="color:var(--muted-text);">Defaulters (&lt;75%)</div>
+                  <strong style="color:var(--red);" id="monthlyDefaulterCount">2 Students</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- 7. Recent Attendance Activity -->
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+              <h3 class="section-title" style="margin-bottom:0;">Recent Attendance Activity</h3>
+              <button onclick="switchTab(2)" style="background:none; border:none; color:var(--primary); font-weight:700; font-size:12px; cursor:pointer;">View All</button>
+            </div>
+            <div id="activityStreamContainer">
+              <!-- Dynamically populated -->
+            </div>
+
+            <!-- 8. Student List Preview -->
+            <div style="display:flex; justify-content:space-between; align-items:center; margin: 24px 0 12px 0;">
+              <div>
+                <h3 class="section-title" style="margin-bottom:2px;">Student Roster Preview</h3>
+                <p style="font-size:12px; color:var(--secondary-text);">Quick toggle status with P (Present), A (Absent), or L (Late)</p>
+              </div>
+              <button onclick="switchTab(1)" style="background:none; border:none; color:var(--primary); font-weight:700; font-size:12px; cursor:pointer;">Full Roster</button>
+            </div>
+
+            <div style="margin-bottom: 14px;">
+              <input type="text" id="dashboardSearchInput" class="form-input" placeholder="Search by name, roll number, or class..." oninput="handleSearch(this.value)">
+            </div>
+
+            <div id="studentPreviewContainer">
+              <!-- Dynamically populated -->
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 1: FULL STUDENT DIRECTORY              -->
+        <!-- ========================================== -->
+        <div class="screen" id="tab1">
+          <div class="content-body">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+              <div>
+                <h2 style="font-size:20px; font-weight:800;">Student Directory</h2>
+                <p style="font-size:12px; color:var(--secondary-text);">Manage enrolled students and individual attendance records</p>
+              </div>
+              <button onclick="openAddStudentModal()" style="background:var(--primary); color:white; border:none; padding:10px 18px; border-radius:12px; font-weight:700; font-size:13px; cursor:pointer; display:flex; align-items:center; gap:6px;">
+                <span class="material-symbols-rounded" style="font-size:18px;">person_add</span> Add
+              </button>
+            </div>
+
+            <input type="text" class="form-input" placeholder="Filter by student name or roll ID..." oninput="handleSearch(this.value)" style="margin-bottom:12px;">
+
+            <div style="display:flex; gap:8px; overflow-x:auto; padding-bottom:8px; margin-bottom:14px;">
+              <button class="view-btn active" id="chipAll" onclick="filterClass('All')">All Classes</button>
+              <button class="view-btn" id="chipCSE3A" onclick="filterClass('CSE-3A')">CSE-3A</button>
+              <button class="view-btn" id="chipCSE3B" onclick="filterClass('CSE-3B')">CSE-3B</button>
+              <button class="view-btn" id="chipECE2A" onclick="filterClass('ECE-2A')">ECE-2A</button>
+              <button class="view-btn" id="chipIT4A" onclick="filterClass('IT-4A')">IT-4A</button>
+            </div>
+
+            <div id="fullStudentListContainer">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 2: MARK ATTENDANCE INTERFACE           -->
+        <!-- ========================================== -->
+        <div class="screen" id="tab2">
+          <div class="content-body">
+            <div style="background:white; border-radius:20px; border:1px solid var(--border); padding:16px; margin-bottom:18px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <span class="material-symbols-rounded" style="color:var(--primary);">calendar_today</span>
+                  <strong style="font-size:14px;">Thursday, Nov 12, 2026</strong>
+                </div>
+                <span style="background:var(--primary-container); color:var(--primary); font-size:12px; font-weight:800; padding:4px 10px; border-radius:8px;" id="markAttendanceCounter">
+                  9 / 12 Present
+                </span>
+              </div>
+
+              <!-- Batch Buttons -->
+              <div style="display:flex; gap:10px;">
+                <button onclick="bulkMark('present')" style="flex:1; background:var(--green-container); color:var(--green); border:1.5px solid var(--green); padding:10px; border-radius:12px; font-weight:700; font-size:13px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
+                  <span class="material-symbols-rounded" style="font-size:18px;">check_circle</span> Mark All Present
+                </button>
+                <button onclick="bulkMark('absent')" style="flex:1; background:var(--red-container); color:var(--red); border:1.5px solid var(--red); padding:10px; border-radius:12px; font-weight:700; font-size:13px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
+                  <span class="material-symbols-rounded" style="font-size:18px;">cancel</span> Mark All Absent
+                </button>
+              </div>
+            </div>
+
+            <div id="markAttendanceStudentList">
+              <!-- Dynamically populated with toggle buttons -->
+            </div>
+
+            <!-- Save Attendance CTA -->
+            <button onclick="saveAttendanceSession()" style="width:100%; background:var(--primary); color:white; border:none; padding:16px; border-radius:16px; font-size:15px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 6px 18px rgba(79, 70, 229, 0.35); margin-top:16px;">
+              <span class="material-symbols-rounded">cloud_upload</span> Save Attendance Session
+            </button>
+          </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 3: REPORTS & ANALYTICS                 -->
+        <!-- ========================================== -->
+        <div class="screen" id="tab3">
+          <div class="content-body">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+              <div>
+                <h2 style="font-size:20px; font-weight:800;">Attendance Reports</h2>
+                <p style="font-size:12px; color:var(--secondary-text);">Semester V Consolidated Class Analytics</p>
+              </div>
+              <button onclick="exportReport('PDF')" style="background:var(--primary-container); color:var(--primary); border:none; padding:8px 14px; border-radius:10px; font-weight:700; font-size:12px; cursor:pointer; display:flex; align-items:center; gap:6px;">
+                <span class="material-symbols-rounded" style="font-size:16px;">download</span> Export
+              </button>
+            </div>
+
+            <!-- Batch Progress Bars -->
+            <div style="background:white; border-radius:20px; border:1px solid var(--border); padding:20px; margin-bottom:20px;">
+              <h3 style="font-size:15px; font-weight:800; margin-bottom:16px;">Batch-Wise Attendance Comparison</h3>
+              
+              <div style="margin-bottom:14px;">
+                <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:700; margin-bottom:6px;">
+                  <span>CSE-3A (24 Students)</span>
+                  <span style="color:var(--primary);">94.2%</span>
+                </div>
+                <div class="progress-bar-bg" style="margin:0;"><div class="progress-bar-fill" style="width:94.2%; background:var(--primary);"></div></div>
+              </div>
+
+              <div style="margin-bottom:14px;">
+                <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:700; margin-bottom:6px;">
+                  <span>ECE-2A (18 Students)</span>
+                  <span style="color:var(--secondary);">91.0%</span>
+                </div>
+                <div class="progress-bar-bg" style="margin:0;"><div class="progress-bar-fill" style="width:91.0%; background:var(--secondary);"></div></div>
+              </div>
+
+              <div style="margin-bottom:14px;">
+                <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:700; margin-bottom:6px;">
+                  <span>CSE-3B (24 Students)</span>
+                  <span style="color:var(--blue);">88.5%</span>
+                </div>
+                <div class="progress-bar-bg" style="margin:0;"><div class="progress-bar-fill" style="width:88.5%; background:var(--blue);"></div></div>
+              </div>
+
+              <div>
+                <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:700; margin-bottom:6px;">
+                  <span>IT-4A (16 Students)</span>
+                  <span style="color:var(--amber);">86.4%</span>
+                </div>
+                <div class="progress-bar-bg" style="margin:0;"><div class="progress-bar-fill" style="width:86.4%; background:var(--amber);"></div></div>
+              </div>
+            </div>
+
+            <!-- Defaulter Warning Card -->
+            <div style="background:white; border-radius:20px; border:1px solid rgba(239, 68, 68, 0.4); padding:20px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <span class="material-symbols-rounded" style="color:var(--red);">warning</span>
+                  <h3 style="font-size:15px; font-weight:800; color:var(--red-text);">Defaulters Alert (&lt;75% Attendance)</h3>
+                </div>
+                <span style="background:var(--red-container); color:var(--red); font-size:11px; font-weight:800; padding:3px 8px; border-radius:6px;">2 Flagged</span>
+              </div>
+              <div id="reportsDefaulterList">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 4: TEACHER PROFILE & LAB INFO          -->
+        <!-- ========================================== -->
+        <div class="screen" id="tab4">
+          <div class="content-body">
+            <div style="background:linear-gradient(135deg, var(--primary), var(--secondary)); border-radius:24px; padding:24px; color:white; text-align:center; margin-bottom:20px;">
+              <div style="width:76px; height:76px; border-radius:50%; background:var(--secondary-container); color:var(--secondary); font-size:26px; font-weight:900; display:flex; align-items:center; justify-content:center; margin:0 auto 12px auto; border:3px solid white;">
+                SJ
+              </div>
+              <h2 style="font-size:20px; font-weight:800;">Prof. Sarah Jenkins</h2>
+              <p style="font-size:12px; color:rgba(255,255,255,0.9); margin-top:3px;">Senior Assistant Professor & Class Coordinator</p>
+              <div style="display:inline-block; background:rgba(255,255,255,0.2); padding:4px 12px; border-radius:20px; font-size:11px; font-weight:700; margin-top:8px;">
+                Dept of Computer Science & Engineering
+              </div>
+            </div>
+
+            <div style="background:white; border-radius:20px; border:1px solid var(--border); padding:20px; margin-bottom:18px;">
+              <h3 style="font-size:15px; font-weight:800; margin-bottom:12px;">Faculty Details</h3>
+              <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:10px;">
+                <span style="color:var(--secondary-text);">Faculty ID:</span>
+                <strong>FAC-CSE-2024-88</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:10px;">
+                <span style="color:var(--secondary-text);">Campus Email:</span>
+                <strong>s.jenkins@campusone.edu</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:10px;">
+                <span style="color:var(--secondary-text);">Office Cabin:</span>
+                <strong>Room 312, Turing Block</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between; font-size:13px;">
+                <span style="color:var(--secondary-text);">Academic Year:</span>
+                <strong>2026 – 2027</strong>
+              </div>
+            </div>
+
+            <!-- College Lab Evaluation Box -->
+            <div style="background:var(--primary-container); border-radius:20px; border:1px solid rgba(99, 102, 241, 0.3); padding:20px;">
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+                <span class="material-symbols-rounded" style="color:var(--primary);">verified</span>
+                <h3 style="font-size:15px; font-weight:800; color:var(--primary);">College Lab Architecture</h3>
+              </div>
+              <p style="font-size:12.5px; color:var(--text); line-height:1.5;">
+                • <strong>Frontend:</strong> Flutter & Dart with Material 3 Design System.<br>
+                • <strong>State Management:</strong> In-Memory Reactive ChangeNotifier.<br>
+                • <strong>Design Language:</strong> Purple & Indigo educational SaaS palette.<br>
+                • <strong>Zero Backend:</strong> Offline evaluation ready, zero dependencies required.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bottom Navigation Bar -->
+      <div class="bottom-nav">
+        <button class="nav-tab active" onclick="switchTab(0)">
+          <div class="nav-icon-wrap"><span class="material-symbols-rounded">dashboard</span></div>
+          <span>Home</span>
+        </button>
+        <button class="nav-tab" onclick="switchTab(1)">
+          <div class="nav-icon-wrap"><span class="material-symbols-rounded">people</span></div>
+          <span>Students</span>
+        </button>
+        <button class="nav-tab" onclick="switchTab(2)">
+          <div class="nav-icon-wrap"><span class="material-symbols-rounded">checklist</span></div>
+          <span>Attendance</span>
+        </button>
+        <button class="nav-tab" onclick="switchTab(3)">
+          <div class="nav-icon-wrap"><span class="material-symbols-rounded">analytics</span></div>
+          <span>Reports</span>
+        </button>
+        <button class="nav-tab" onclick="switchTab(4)">
+          <div class="nav-icon-wrap"><span class="material-symbols-rounded">person</span></div>
+          <span>Profile</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ADD STUDENT MODAL -->
+  <div class="modal-overlay" id="addStudentModal">
+    <div class="modal-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="width:38px; height:38px; border-radius:10px; background:var(--primary-container); color:var(--primary); display:flex; align-items:center; justify-content:center;">
+            <span class="material-symbols-rounded">person_add</span>
+          </div>
+          <div>
+            <h3 style="font-size:17px; font-weight:800;">Add New Student</h3>
+            <p style="font-size:11px; color:var(--secondary-text);">Register into college attendance ledger</p>
+          </div>
+        </div>
+        <button onclick="closeModal('addStudentModal')" style="background:none; border:none; cursor:pointer;"><span class="material-symbols-rounded">close</span></button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Student Full Name *</label>
+        <input type="text" id="addName" class="form-input" placeholder="e.g. Vikram Malhotra">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Roll Number / Registration ID *</label>
+        <input type="text" id="addRoll" class="form-input" placeholder="e.g. 24CS013">
+      </div>
+
+      <div style="display:flex; gap:10px;">
+        <div class="form-group" style="flex:1;">
+          <label class="form-label">Class Batch *</label>
+          <select id="addClass" class="form-select">
+            <option value="CSE-3A">CSE-3A</option>
+            <option value="CSE-3B">CSE-3B</option>
+            <option value="ECE-2A">ECE-2A</option>
+            <option value="IT-4A">IT-4A</option>
+          </select>
+        </div>
+        <div class="form-group" style="flex:1;">
+          <label class="form-label">Department</label>
+          <select id="addDept" class="form-select">
+            <option value="Computer Science">Computer Science</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Information Tech">Information Tech</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Parent / Student Contact</label>
+        <input type="tel" id="addPhone" class="form-input" placeholder="+91 98765 00000">
+      </div>
+
+      <button onclick="submitAddStudent()" style="width:100%; background:var(--primary); color:white; border:none; padding:14px; border-radius:14px; font-weight:800; cursor:pointer; margin-top:8px;">
+        Enroll Student
+      </button>
+    </div>
+  </div>
+
+  <!-- NOTIFICATIONS MODAL -->
+  <div class="modal-overlay" id="notifModal">
+    <div class="modal-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <h3 style="font-size:17px; font-weight:800;">Notifications & Alerts</h3>
+          <span style="background:var(--primary-container); color:var(--primary); font-size:11px; font-weight:800; padding:2px 8px; border-radius:10px;">2 New</span>
+        </div>
+        <button onclick="closeModal('notifModal')" style="background:none; border:none; cursor:pointer;"><span class="material-symbols-rounded">close</span></button>
+      </div>
+
+      <div class="activity-item" style="border-color:rgba(239, 68, 68, 0.3);">
+        <div class="activity-user">
+          <div class="user-avatar" style="background:var(--red-container); color:var(--red);">
+            <span class="material-symbols-rounded">warning</span>
+          </div>
+          <div class="activity-text-wrap">
+            <div class="user-name">Low Attendance Warning</div>
+            <div class="user-meta">Rahul Verma & Priya Patel are below 75% threshold</div>
+          </div>
+        </div>
+        <span style="font-size:11px; color:var(--muted-text); flex-shrink:0;">10m ago</span>
+      </div>
+
+      <div class="activity-item" style="border-color:rgba(16, 185, 129, 0.3);">
+        <div class="activity-user">
+          <div class="user-avatar" style="background:var(--green-container); color:var(--green);">
+            <span class="material-symbols-rounded">check_circle</span>
+          </div>
+          <div class="activity-text-wrap">
+            <div class="user-name">Session Recorded</div>
+            <div class="user-meta">CSE-3A Attendance logged successfully</div>
+          </div>
+        </div>
+        <span style="font-size:11px; color:var(--muted-text); flex-shrink:0;">25m ago</span>
+      </div>
+
+      <div class="activity-item">
+        <div class="activity-user">
+          <div class="user-avatar" style="background:var(--blue-container); color:var(--blue);">
+            <span class="material-symbols-rounded">description</span>
+          </div>
+          <div class="activity-text-wrap">
+            <div class="user-name">Weekly Report Ready</div>
+            <div class="user-meta">Consolidated report for week 45 ready for download</div>
+          </div>
+        </div>
+        <span style="font-size:11px; color:var(--muted-text); flex-shrink:0;">2h ago</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MANAGE CLASSES MODAL -->
+  <div class="modal-overlay" id="classesModal">
+    <div class="modal-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <h3 style="font-size:17px; font-weight:800;">Manage Active Batches</h3>
+        <button onclick="closeModal('classesModal')" style="background:none; border:none; cursor:pointer;"><span class="material-symbols-rounded">close</span></button>
+      </div>
+
+      <div class="activity-item" onclick="filterClass('CSE-3A'); closeModal('classesModal');" style="cursor:pointer;">
+        <div class="activity-user">
+          <div class="user-avatar" style="background:var(--primary-container); color:var(--primary);">
+            <span class="material-symbols-rounded">school</span>
+          </div>
+          <div class="activity-text-wrap">
+            <div class="user-name">CSE-3A (24 Students)</div>
+            <div class="user-meta">Data Structures • Lab 402, Turing Block</div>
+          </div>
+        </div>
+        <span style="background:var(--green-container); color:var(--green); font-size:11px; font-weight:800; padding:4px 8px; border-radius:6px; flex-shrink:0;">94.2%</span>
+      </div>
+
+      <div class="activity-item" onclick="filterClass('CSE-3B'); closeModal('classesModal');" style="cursor:pointer;">
+        <div class="activity-user">
+          <div class="user-avatar" style="background:var(--secondary-container); color:var(--secondary);">
+            <span class="material-symbols-rounded">school</span>
+          </div>
+          <div class="activity-text-wrap">
+            <div class="user-name">CSE-3B (24 Students)</div>
+            <div class="user-meta">Object Oriented Java • Lab 405, Lovelace Block</div>
+          </div>
+        </div>
+        <span style="background:var(--green-container); color:var(--green); font-size:11px; font-weight:800; padding:4px 8px; border-radius:6px; flex-shrink:0;">88.5%</span>
+      </div>
+
+      <div class="activity-item" onclick="filterClass('ECE-2A'); closeModal('classesModal');" style="cursor:pointer;">
+        <div class="activity-user">
+          <div class="user-avatar" style="background:var(--blue-container); color:var(--blue);">
+            <span class="material-symbols-rounded">school</span>
+          </div>
+          <div class="activity-text-wrap">
+            <div class="user-name">ECE-2A (18 Students)</div>
+            <div class="user-meta">Digital Signal Processing • Hall 201</div>
+          </div>
+        </div>
+        <span style="background:var(--green-container); color:var(--green); font-size:11px; font-weight:800; padding:4px 8px; border-radius:6px; flex-shrink:0;">91.0%</span>
+      </div>
+
+      <div class="activity-item" onclick="filterClass('IT-4A'); closeModal('classesModal');" style="cursor:pointer;">
+        <div class="activity-user">
+          <div class="user-avatar" style="background:var(--amber-container); color:var(--amber);">
+            <span class="material-symbols-rounded">school</span>
+          </div>
+          <div class="activity-text-wrap">
+            <div class="user-name">IT-4A (16 Students)</div>
+            <div class="user-meta">Cloud DevOps • Room 108</div>
+          </div>
+        </div>
+        <span style="background:var(--green-container); color:var(--green); font-size:11px; font-weight:800; padding:4px 8px; border-radius:6px; flex-shrink:0;">86.4%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST MESSAGE -->
+  <div class="toast-msg" id="toastMsg">
+    <span class="material-symbols-rounded" style="color:#34D399;">check_circle</span>
+    <span id="toastText">Action completed successfully</span>
+  </div>
+
+  <script>
+    // In-Memory Realistic Reactive State
+    const state = {
+      students: [
+        { id: '1', name: 'Aarav Sharma', roll: '24CS001', class: 'CSE-3A', rate: 94.5, status: 'present', color: '#4F46E5', initials: 'AS' },
+        { id: '2', name: 'Emily Watson', roll: '24CS002', class: 'CSE-3A', rate: 91.0, status: 'present', color: '#7C3AED', initials: 'EW' },
+        { id: '3', name: 'Rahul Verma', roll: '24CS003', class: 'CSE-3A', rate: 68.2, status: 'absent', color: '#059669', initials: 'RV' },
+        { id: '4', name: 'Sophia Miller', roll: '24CS004', class: 'CSE-3A', rate: 96.0, status: 'present', color: '#0284C7', initials: 'SM' },
+        { id: '5', name: 'Michael Chang', roll: '24CS005', class: 'CSE-3B', rate: 88.5, status: 'late', color: '#D97706', initials: 'MC' },
+        { id: '6', name: 'Priya Patel', roll: '24CS006', class: 'CSE-3B', rate: 71.5, status: 'absent', color: '#E11D48', initials: 'PP' },
+        { id: '7', name: 'Ethan Wright', roll: '24CS007', class: 'CSE-3B', rate: 92.0, status: 'present', color: '#7C2D12', initials: 'EW' },
+        { id: '8', name: 'Ananya Iyer', roll: '24CS008', class: 'ECE-2A', rate: 97.4, status: 'present', color: '#0D9488', initials: 'AI' },
+        { id: '9', name: 'Lucas Garcia', roll: '24CS009', class: 'ECE-2A', rate: 84.0, status: 'present', color: '#4F46E5', initials: 'LG' },
+        { id: '10', name: 'Olivia Brown', roll: '24CS010', class: 'ECE-2A', rate: 89.2, status: 'present', color: '#7C3AED', initials: 'OB' },
+        { id: '11', name: 'David Kim', roll: '24CS011', class: 'IT-4A', rate: 93.8, status: 'present', color: '#059669', initials: 'DK' },
+        { id: '12', name: 'Jessica Taylor', roll: '24CS012', class: 'IT-4A', rate: 82.5, status: 'present', color: '#0284C7', initials: 'JT' }
+      ],
+      activities: [
+        { name: 'Aarav Sharma', roll: '24CS001', class: 'CSE-3A', status: 'present', time: '09:15 AM' },
+        { name: 'Emily Watson', roll: '24CS002', class: 'CSE-3A', status: 'present', time: '09:14 AM' },
+        { name: 'Rahul Verma', roll: '24CS003', class: 'CSE-3A', status: 'absent', time: '09:10 AM' },
+        { name: 'Michael Chang', roll: '24CS005', class: 'CSE-3B', status: 'late', time: '09:08 AM' },
+        { name: 'Priya Patel', roll: '24CS006', class: 'CSE-3B', status: 'absent', time: '09:05 AM' }
+      ],
+      selectedClass: 'All',
+      searchQuery: ''
+    };
+
+    // Navigation Switcher
+    function switchTab(index) {
+      document.querySelectorAll('.screen').forEach((el, idx) => {
+        el.classList.toggle('active', idx === index);
+      });
+      document.querySelectorAll('.nav-tab').forEach((el, idx) => {
+        el.classList.toggle('active', idx === index);
+      });
+      const container = document.querySelector('.screen-container');
+      if (container) container.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Device View Mode
+    function setDeviceView(mode) {
+      const frame = document.getElementById('appFrame');
+      document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+
+      frame.classList.remove('tablet', 'desktop');
+      if (mode === 'tablet') frame.classList.add('tablet');
+      if (mode === 'desktop') frame.classList.add('desktop');
+    }
+
+    // Toggle Attendance Status
+    function setStatus(studentId, newStatus) {
+      const student = state.students.find(s => s.id === studentId);
+      if (student) {
+        student.status = newStatus;
+        
+        // Add to activity stream
+        const timeNow = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        state.activities.unshift({
+          name: student.name,
+          roll: student.roll,
+          class: student.class,
+          status: newStatus,
+          time: timeNow
+        });
+        if (state.activities.length > 8) state.activities.pop();
+
+        renderAll();
+        showToast(`Marked ${student.name} as ${newStatus.toUpperCase()}`);
+      }
+    }
+
+    // Bulk Mark
+    function bulkMark(status) {
+      state.students.forEach(s => s.status = status);
+      const timeNow = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      state.activities.unshift({
+        name: `All Students (${state.students.length})`,
+        roll: 'BATCH',
+        class: state.selectedClass,
+        status: status,
+        time: timeNow
+      });
+      renderAll();
+      showToast(`Marked all students as ${status.toUpperCase()}!`);
+    }
+
+    // Add Student
+    function submitAddStudent() {
+      const name = document.getElementById('addName').value.trim();
+      const roll = document.getElementById('addRoll').value.trim().toUpperCase();
+      const className = document.getElementById('addClass').value;
+      
+      if (!name || !roll) {
+        alert('Please enter student name and roll number.');
+        return;
+      }
+
+      const colors = ['#4F46E5', '#7C3AED', '#059669', '#0284C7', '#D97706'];
+      const initials = name.split(' ').map(p => p[0]).join('').substring(0, 2).toUpperCase();
+
+      state.students.unshift({
+        id: String(Date.now()),
+        name,
+        roll,
+        class: className,
+        rate: 100.0,
+        status: 'present',
+        color: colors[state.students.length % colors.length],
+        initials
+      });
+
+      closeModal('addStudentModal');
+      document.getElementById('addName').value = '';
+      document.getElementById('addRoll').value = '';
+      
+      renderAll();
+      showToast(`Student "${name}" enrolled successfully!`);
+    }
+
+    function saveAttendanceSession() {
+      const present = state.students.filter(s => s.status === 'present').length;
+      const absent = state.students.filter(s => s.status === 'absent').length;
+      showToast(`Session finalized: ${present} Present, ${absent} Absent!`);
+    }
+
+    function exportReport(format) {
+      showToast(`Consolidated Attendance Report exported as ${format}!`);
+    }
+
+    // Filter by search
+    function handleSearch(val) {
+      state.searchQuery = val.toLowerCase().trim();
+      renderStudents();
+    }
+
+    // Filter by class
+    function filterClass(cls) {
+      state.selectedClass = cls;
+      ['All', 'CSE3A', 'CSE3B', 'ECE2A', 'IT4A'].forEach(c => {
+        const el = document.getElementById(`chip${c}`);
+        if (el) el.classList.remove('active');
+      });
+      const activeBtn = document.getElementById(`chip${cls.replace('-', '')}`);
+      if (activeBtn) activeBtn.classList.add('active');
+      renderStudents();
+    }
+
+    // Inspect Chart Day
+    function inspectDay(day, percent, present, absent) {
+      document.querySelectorAll('.bar-col').forEach(col => col.classList.remove('active'));
+      document.querySelectorAll('.chart-day-label').forEach(lbl => lbl.classList.remove('active'));
+      
+      const bars = document.querySelectorAll('.bar-col');
+      const labels = document.querySelectorAll('.chart-day-label');
+      const dayIndex = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(day);
+      if (dayIndex !== -1) {
+        if (bars[dayIndex]) bars[dayIndex].classList.add('active');
+        if (labels[dayIndex]) labels[dayIndex].classList.add('active');
+      }
+
+      document.getElementById('chartTagText').innerText = `${day}: ${percent}%`;
+      document.getElementById('chartFooterDay').innerText = day;
+      document.getElementById('chartFooterPresent').innerText = present;
+      document.getElementById('chartFooterAbsent').innerText = absent;
+      document.getElementById('chartFooterRate').innerText = `${percent}%`;
+    }
+
+    // Modals
+    function openAddStudentModal() { document.getElementById('addStudentModal').style.display = 'flex'; }
+    function openNotificationsModal() { document.getElementById('notifModal').style.display = 'flex'; }
+    function openManageClassesModal() { document.getElementById('classesModal').style.display = 'flex'; }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+    // Toast
+    function showToast(text) {
+      const t = document.getElementById('toastMsg');
+      document.getElementById('toastText').innerText = text;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2800);
+    }
+
+    // Render Stats & UI
+    function renderAll() {
+      const total = state.students.length;
+      const present = state.students.filter(s => s.status === 'present').length;
+      const absent = state.students.filter(s => s.status === 'absent').length;
+      const late = state.students.filter(s => s.status === 'late').length;
+      const rate = total === 0 ? 0 : Math.round((present / total) * 100);
+      const defaulters = state.students.filter(s => s.rate < 75);
+
+      document.getElementById('heroTotalStudents').innerText = total;
+      document.getElementById('statTotalStudents').innerText = total;
+      document.getElementById('statPresentToday').innerText = present;
+      document.getElementById('statAbsentToday').innerText = absent;
+      document.getElementById('statAttendanceRate').innerText = `${rate}%`;
+      document.getElementById('markAttendanceCounter').innerText = `${present} / ${total} Present`;
+      document.getElementById('statLateText').innerText = `● ${late} Late arrivals`;
+      document.getElementById('statDefaulterSub').innerText = `● ${defaulters.length} Defaulters (<75%)`;
+      document.getElementById('monthlyDefaulterCount').innerText = `${defaulters.length} Students`;
+
+      renderActivities();
+      renderStudents();
+      renderReports();
+    }
+
+    function renderActivities() {
+      const container = document.getElementById('activityStreamContainer');
+      container.innerHTML = state.activities.map(act => `
+        <div class="activity-item">
+          <div class="activity-user">
+            <div class="user-avatar" style="background:var(--primary-container); color:var(--primary);">
+              ${act.name.substring(0, 2).toUpperCase()}
+            </div>
+            <div class="activity-text-wrap">
+              <div class="user-name">${act.name}</div>
+              <div class="user-meta">${act.roll} • ${act.class}</div>
+            </div>
+          </div>
+          <div class="activity-status-col">
+            <div class="status-chip ${act.status}">
+              ${act.status === 'present' ? 'Present' : (act.status === 'absent' ? 'Absent' : 'Late')}
+            </div>
+            <div style="font-size:10px; color:var(--muted-text); margin-top:3px;">${act.time}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderStudents() {
+      const filtered = state.students.filter(s => {
+        const matchesClass = state.selectedClass === 'All' || s.class === state.selectedClass;
+        const matchesSearch = !state.searchQuery || 
+          s.name.toLowerCase().includes(state.searchQuery) || 
+          s.roll.toLowerCase().includes(state.searchQuery);
+        return matchesClass && matchesSearch;
+      });
+
+      const makeCardHtml = (s) => `
+        <div class="student-card ${s.status === 'absent' ? 'is-absent' : ''}">
+          <div class="student-info">
+            <div class="user-avatar" style="background:${s.color}20; color:${s.color};">
+              ${s.initials}
+            </div>
+            <div class="student-text-wrap">
+              <div style="display:flex; align-items:center; gap:6px;">
+                <span class="user-name">${s.name}</span>
+                <span style="font-size:10px; font-weight:800; background:${s.rate >= 75 ? 'var(--green-container)' : 'var(--red-container)'}; color:${s.rate >= 75 ? 'var(--green)' : 'var(--red)'}; padding:2px 6px; border-radius:4px; flex-shrink:0;">
+                  ${s.rate}%
+                </span>
+              </div>
+              <div class="user-meta">${s.roll} • ${s.class}</div>
+            </div>
+          </div>
+          <div class="toggle-group">
+            <button class="toggle-btn btn-p ${s.status === 'present' ? 'active' : ''}" onclick="setStatus('${s.id}', 'present')" title="Present">P</button>
+            <button class="toggle-btn btn-a ${s.status === 'absent' ? 'active' : ''}" onclick="setStatus('${s.id}', 'absent')" title="Absent">A</button>
+            <button class="toggle-btn btn-l ${s.status === 'late' ? 'active' : ''}" onclick="setStatus('${s.id}', 'late')" title="Late">L</button>
+          </div>
+        </div>
+      `;
+
+      // Preview (top 6)
+      const previewEl = document.getElementById('studentPreviewContainer');
+      if (filtered.length === 0) {
+        previewEl.innerHTML = `<div style="text-align:center; padding:24px; color:var(--muted-text);">No matching students found</div>`;
+      } else {
+        previewEl.innerHTML = filtered.slice(0, 6).map(makeCardHtml).join('');
+      }
+
+      // Full Directory (tab 1)
+      const fullEl = document.getElementById('fullStudentListContainer');
+      if (fullEl) fullEl.innerHTML = filtered.map(makeCardHtml).join('');
+
+      // Mark Attendance (tab 2)
+      const markEl = document.getElementById('markAttendanceStudentList');
+      if (markEl) markEl.innerHTML = filtered.map(makeCardHtml).join('');
+    }
+
+    function renderReports() {
+      const defaulters = state.students.filter(s => s.rate < 75);
+      const container = document.getElementById('reportsDefaulterList');
+      if (!container) return;
+
+      if (defaulters.length === 0) {
+        container.innerHTML = `<div style="padding:12px; font-size:13px; color:var(--green); font-weight:700;">No students are below 75% attendance!</div>`;
+      } else {
+        container.innerHTML = defaulters.map(s => `
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 12px; background:var(--bg); border-radius:12px; margin-top:8px;">
+            <div style="min-width:0; flex:1;">
+              <strong style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">${s.name}</strong>
+              <span style="font-size:11px; color:var(--secondary-text);">${s.roll} • ${s.class}</span>
+            </div>
+            <div style="font-weight:900; color:var(--red); font-size:14px; flex-shrink:0; margin-left:10px;">
+              ${s.rate}%
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    // Initial boot
+    renderAll();
+  </script>
+</body>
+</html>
